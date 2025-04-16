@@ -30,7 +30,6 @@ if not df.empty:
         file_name="ranked_candidates.csv",
         mime="text/csv"
     )
-type=["pdf", "docx"], accept_multiple_files=True)
 
 if uploaded_jd and uploaded_resumes:
     jd_path = tempfile.mktemp(suffix=".txt")
