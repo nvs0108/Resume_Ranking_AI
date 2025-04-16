@@ -7,5 +7,4 @@ python-docx
 pdfplumber
 nltk
 scikit-learn
-sqlite3  # Optional, some platforms ignore this but it's built-in for CPython
 sentence-transformers
