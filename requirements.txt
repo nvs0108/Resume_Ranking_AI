@@ -8,3 +8,4 @@ pdfplumber
 nltk
 scikit-learn
 sentence-transformers
+spacy
