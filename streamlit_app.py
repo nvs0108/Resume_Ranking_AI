@@ -17,7 +17,9 @@ st.title("🤖 AI Resume Screening & Candidate Ranking System")
 st.sidebar.header("📤 Upload Files")
 
 uploaded_jd = st.sidebar.file_uploader("Upload Job Description (.txt)", type="txt")
-uploaded_resumes = st.sidebar.file_uploader("Upload Resumes", import io
+uploaded_resumes = st.file_uploader("Upload Resumes (PDF or DOCX)", type=["pdf", "docx"], accept_multiple_files=True)
+
+import io
 
 if not df.empty:
     csv_buffer = io.StringIO()
