@@ -17,7 +17,18 @@ st.title("🤖 AI Resume Screening & Candidate Ranking System")
 st.sidebar.header("📤 Upload Files")
 
 uploaded_jd = st.sidebar.file_uploader("Upload Job Description (.txt)", type="txt")
-uploaded_resumes = st.sidebar.file_uploader("Upload Resumes", type=["pdf", "docx"], accept_multiple_files=True)
+uploaded_resumes = st.sidebar.file_uploader("Upload Resumes", import io
+
+if not df.empty:
+    csv_buffer = io.StringIO()
+    df.to_csv(csv_buffer, index=False)
+    st.download_button(
+        label="⬇️ Download Ranked Candidates (CSV)",
+        data=csv_buffer.getvalue(),
+        file_name="ranked_candidates.csv",
+        mime="text/csv"
+    )
+type=["pdf", "docx"], accept_multiple_files=True)
 
 if uploaded_jd and uploaded_resumes:
     jd_path = tempfile.mktemp(suffix=".txt")
@@ -45,6 +56,7 @@ if uploaded_jd and uploaded_resumes:
         for r in ranked:
             insert_candidate(r)
         st.success("Saved all candidates to DB ✅")
+    
 
 # -----------------------------------------
 st.markdown("---")
@@ -64,5 +76,16 @@ if candidates:
         filtered_df = filtered_df[filtered_df["Skills"].str.lower().str.contains(skill_filter)]
 
     st.dataframe(filtered_df)
+
+    if not filtered_df.empty:
+    csv_buffer2 = io.StringIO()
+    filtered_df.to_csv(csv_buffer2, index=False)
+    st.download_button(
+        label="⬇️ Download Filtered Candidates (CSV)",
+        data=csv_buffer2.getvalue(),
+        file_name="filtered_candidates.csv",
+        mime="text/csv"
+    )
+
 else:
     st.info("No candidates saved yet. Upload and save resumes to see dashboard.")
