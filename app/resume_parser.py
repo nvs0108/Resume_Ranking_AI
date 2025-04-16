@@ -2,33 +2,50 @@ import os
 import re
 import docx
 import spacy
+from spacy.cli import download
 from pdfminer.high_level import extract_text
 
-nlp = spacy.load("en_core_web_sm")
+# Load or download spaCy model
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
 
 def extract_text_from_pdf(file_path):
     return extract_text(file_path)
+
 
 def extract_text_from_docx(file_path):
     doc = docx.Document(file_path)
     return "\n".join([para.text for para in doc.paragraphs])
 
+
 def extract_email(text):
     match = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", text)
     return match[0] if match else None
+
 
 def extract_phone(text):
     match = re.findall(r"\+?\d[\d\s\-]{8,}\d", text)
     return match[0] if match else None
 
+
 def extract_skills(text):
-    # Sample static skill list; you can make it dynamic later
-    skill_keywords = ["python", "java", "c++", "sql", "excel", "tensorflow", "flask", "html", "css"]
+    # Sample static skill list; can be expanded or made dynamic
+    skill_keywords = [
+        "python", "java", "c++", "sql", "excel",
+        "tensorflow", "pytorch", "flask", "django",
+        "html", "css", "javascript", "react", "node.js",
+        "aws", "docker", "linux", "git"
+    ]
     found = []
     for word in skill_keywords:
         if re.search(rf"\b{word}\b", text, re.IGNORECASE):
-            found.append(word)
+            found.append(word.lower())
     return list(set(found))
+
 
 def extract_name(text):
     doc = nlp(text)
@@ -37,8 +54,9 @@ def extract_name(text):
             return ent.text
     return None
 
+
 def parse_resume(file_path):
-    ext = file_path.split(".")[-1]
+    ext = file_path.split(".")[-1].lower()
     if ext == "pdf":
         text = extract_text_from_pdf(file_path)
     elif ext == "docx":
@@ -53,6 +71,7 @@ def parse_resume(file_path):
         "skills": extract_skills(text),
         "raw_text": text
     }
+
 
 def parse_resumes(resume_folder):
     resumes_data = []
